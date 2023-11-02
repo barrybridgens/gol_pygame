@@ -32,6 +32,7 @@ if (__name__ == "__main__"):
     run = False
     stop = False
     running = False
+    sleep_time = 0.25
     
     while True:
         for event in pygame.event.get():
@@ -43,6 +44,10 @@ if (__name__ == "__main__"):
                     run = True
                 elif event.key == pygame.K_s:
                     stop = True
+                elif event.key == pygame.K_i:
+                    sleep_time = sleep_time / 2.0
+                elif event.key == pygame.K_d:
+                    sleep_time = sleep_time * 2.0
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button = True;
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -131,5 +136,5 @@ if (__name__ == "__main__"):
         pygame.display.update()
 
         if running:
-            time.sleep(1)
+            time.sleep(sleep_time)
 
