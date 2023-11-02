@@ -17,7 +17,15 @@ def display_cells(cells):
         for y in range(TOTAL_ROWS_COLS):
             if cells[x][y] == ALIVE:
                 rect = pygame.Rect(y * CELL_SIZE, x * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-                pygame.draw.rect(screen, COLOUR_ALIVE, rect, 0)    
+                pygame.draw.rect(screen, COLOUR_ALIVE, rect, 0)
+
+def glider(x, y):
+    grid_state[x][y] = ALIVE
+    grid_state[x + 1][y] = ALIVE
+    grid_state[x + 1][y + 1] = ALIVE
+    grid_state[x + 2][y + 1] = ALIVE
+    grid_state[x][y + 2] = ALIVE
+    
 
 if (__name__ == "__main__"):
 
@@ -48,6 +56,8 @@ if (__name__ == "__main__"):
                     sleep_time = sleep_time / 2.0
                 elif event.key == pygame.K_d:
                     sleep_time = sleep_time * 2.0
+                elif event.key == pygame.K_g:
+                    glider(10,70)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button = True;
             elif event.type == pygame.MOUSEBUTTONUP:
