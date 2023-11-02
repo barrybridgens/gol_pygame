@@ -19,13 +19,25 @@ def display_cells(cells):
                 rect = pygame.Rect(y * CELL_SIZE, x * CELL_SIZE, CELL_SIZE, CELL_SIZE)
                 pygame.draw.rect(screen, COLOUR_ALIVE, rect, 0)
 
-def glider(x, y):
+def clear_grid():
+    for x in range(TOTAL_ROWS_COLS):
+        for y in range(TOTAL_ROWS_COLS):
+            grid_state[x][y] = DEAD
+    new_state = copy.deepcopy(grid_state)
+
+def glider_down_left(x, y):
     grid_state[x][y] = ALIVE
     grid_state[x + 1][y] = ALIVE
     grid_state[x + 1][y + 1] = ALIVE
     grid_state[x + 2][y + 1] = ALIVE
     grid_state[x][y + 2] = ALIVE
-    
+
+def glider_up_right(x, y):
+    grid_state[x][y] = ALIVE
+    grid_state[x - 1][y] = ALIVE
+    grid_state[x - 1][y - 1] = ALIVE
+    grid_state[x - 2][y - 1] = ALIVE
+    grid_state[x][y - 2] = ALIVE
 
 if (__name__ == "__main__"):
 
@@ -57,7 +69,17 @@ if (__name__ == "__main__"):
                 elif event.key == pygame.K_d:
                     sleep_time = sleep_time * 2.0
                 elif event.key == pygame.K_g:
-                    glider(10,70)
+                    glider_up_right(70,12)
+                elif event.key == pygame.K_h:
+                    glider_down_left(8,70)
+                elif event.key == pygame.K_c:
+                    for x in range(TOTAL_ROWS_COLS):
+                        for y in range(TOTAL_ROWS_COLS):
+                            grid_state[x][y] = DEAD
+                        new_state = copy.deepcopy(grid_state)
+                elif event.key ==pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button = True;
             elif event.type == pygame.MOUSEBUTTONUP:
