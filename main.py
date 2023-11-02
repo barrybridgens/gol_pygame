@@ -12,12 +12,12 @@ def draw_grid():
             rect = pygame.Rect(col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(screen, COLOUR_GRID, rect, 1)
 
-def display_cells(cells):
+def display_cells(cells, colour):
     for x in range(TOTAL_ROWS_COLS):
         for y in range(TOTAL_ROWS_COLS):
             if cells[x][y] == ALIVE:
                 rect = pygame.Rect(y * CELL_SIZE, x * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-                pygame.draw.rect(screen, COLOUR_ALIVE, rect, 0)
+                pygame.draw.rect(screen, colour, rect, 0)
 
 def clear_grid():
     for x in range(TOTAL_ROWS_COLS):
@@ -39,6 +39,20 @@ def glider_up_right(x, y):
     grid_state[x - 2][y - 1] = ALIVE
     grid_state[x][y - 2] = ALIVE
 
+def glider_up_left(x, y):
+    grid_state[x][y] = ALIVE
+    grid_state[x - 1][y] = ALIVE
+    grid_state[x - 1][y + 1] = ALIVE
+    grid_state[x - 2][y + 1] = ALIVE
+    grid_state[x][y + 2] = ALIVE
+
+def glider_down_right(x, y):
+    grid_state[x][y] = ALIVE
+    grid_state[x + 1][y] = ALIVE
+    grid_state[x + 1][y - 1] = ALIVE
+    grid_state[x + 2][y - 1] = ALIVE
+    grid_state[x][y - 2] = ALIVE
+
 if (__name__ == "__main__"):
 
     grid_state = [[DEAD for _ in range(TOTAL_ROWS_COLS)]
@@ -53,10 +67,13 @@ if (__name__ == "__main__"):
     stop = False
     running = False
     sleep_time = 0.25
+    generations = 0
     
     while True:
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print("Genersations = ", generations)
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
@@ -69,15 +86,20 @@ if (__name__ == "__main__"):
                 elif event.key == pygame.K_d:
                     sleep_time = sleep_time * 2.0
                 elif event.key == pygame.K_g:
-                    glider_up_right(70,12)
+                    glider_up_right((TOTAL_ROWS_COLS - CELL_SIZE),CELL_SIZE)
+                elif event.key == pygame.K_y:
+                    glider_down_left(CELL_SIZE,(TOTAL_ROWS_COLS - CELL_SIZE))
                 elif event.key == pygame.K_h:
-                    glider_down_left(8,70)
+                    glider_up_left((TOTAL_ROWS_COLS - CELL_SIZE), (TOTAL_ROWS_COLS - CELL_SIZE))
+                elif event.key == pygame.K_t:
+                    glider_down_right(CELL_SIZE, CELL_SIZE)
                 elif event.key == pygame.K_c:
                     for x in range(TOTAL_ROWS_COLS):
                         for y in range(TOTAL_ROWS_COLS):
                             grid_state[x][y] = DEAD
                         new_state = copy.deepcopy(grid_state)
                 elif event.key ==pygame.K_q:
+                    print("Genersations = ", generations)
                     pygame.quit()
                     sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -107,6 +129,8 @@ if (__name__ == "__main__"):
             stop = False
         
         if running:
+            generations = generations + 1
+            
             for x in range(TOTAL_ROWS_COLS):
                 for y in range(TOTAL_ROWS_COLS):
                     # Count neighbours
@@ -163,7 +187,7 @@ if (__name__ == "__main__"):
             grid_state = copy.deepcopy(new_state)
 
         
-        display_cells(grid_state)
+        display_cells(grid_state, COLOUR_ALIVE)
             
         pygame.display.update()
 
